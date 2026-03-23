@@ -1,13 +1,16 @@
 PRE = "<|fim_prefix|>"
 MID = "<|fim_middle|>"
 SUF = "<|fim_suffix|>"
+from .cache import function_cache
+def post_process(prompt: str) -> str:
+    return prompt
 def prepare_prompt_humaneval(samples: list[dict]) -> list[str]:
     result: list[str] = []
     for sample in samples:
         prefix = sample["prompt"]
         suffix = sample["suffix"]
         prompt = PRE + prefix + SUF + suffix + MID
-        result.append(prompt)
+        result.append(post_process(prompt))
     return result
 def prepare_prompt_safim(samples: list[dict]) -> list[str]:
     result: list[str] = []
@@ -15,7 +18,7 @@ def prepare_prompt_safim(samples: list[dict]) -> list[str]:
         total: str = sample["prompt"]
         prefix, suffix = total.split("{{completion}}")
         prompt = PRE + prefix + SUF + suffix + MID
-        result.append(prompt)
+        result.append(post_process(prompt))
     return result
 
 # Simplified of Qwen source code
@@ -47,7 +50,7 @@ def prepare_prompt(
         prompt = f'{prefix_token}{left_cxt_truncated}{suffix_token}{right_cxt_truncated}{crossfile_cxt_truncated}{middle_token}'
     else:
         raise NotImplementedError
-    return prompt
+    return post_process(prompt)
 
 def _truncate_prompt(prompt, max_num_tokens, tokenizer, side="right"):
     tokens = tokenizer.tokenize(prompt)
@@ -61,7 +64,7 @@ def _truncate_prompt(prompt, max_num_tokens, tokenizer, side="right"):
         new_len = len(tokenizer.tokenize(prompt))
         if new_len > max_num_tokens:
             print(f'Number of tokens after truncation is greater than max tokens allowed {max_num_tokens}: {new_len} {num_tokens}')
-    return prompt
+    return post_process(prompt)
 
 # Simplified of Qwen source code
 QWEN_CODER_TEMPLAT="""
@@ -97,7 +100,7 @@ def prepare_prompt_exec_repo_bench(tokenizer, obj: dict, context_order, max_toke
         repo_content += f"\n<|file_sep|>{f}\n{c}"
     context_code = repo_start + repo_content + f"\n<|file_sep|>{obj['file_name']}\n"
     input_prompt = QWEN_CODER_TEMPLAT.format(context_code, prefix_code, suffix_code)
-    obj["input"] = input_prompt
+    obj["input"] = post_process(input_prompt)
     return obj
 def prepare_prompt_exec_repo_bench_no(tokenizer, obj: dict, context_order, max_tokens, max_generation_tokens, max_context_tokens):
     context_code_files, prefix_code, suffix_code = obj["context_code"], obj["prefix_code"], obj["suffix_code"]
@@ -130,7 +133,7 @@ def prepare_prompt_exec_repo_bench_no(tokenizer, obj: dict, context_order, max_t
     repo_content = ""
     context_code = repo_start + repo_content + f"\n<|file_sep|>{obj['file_name']}\n"
     input_prompt = QWEN_CODER_TEMPLAT.format(context_code, prefix_code, suffix_code)
-    obj["input"] = input_prompt
+    obj["input"] = post_process(input_prompt)
     return obj
 def prepare_prompt_exec_repo_bench_ex(tokenizer, obj: dict, context_order, max_tokens, max_generation_tokens, max_context_tokens, grammer_path: str):
     from .collapse import collapse_code
@@ -175,5 +178,5 @@ def prepare_prompt_exec_repo_bench_ex(tokenizer, obj: dict, context_order, max_t
         repo_content += f"\n<|file_sep|>{f}\n{c}"
     context_code = repo_start + repo_content + f"\n<|file_sep|>{obj['file_name']}\n"
     input_prompt = QWEN_CODER_TEMPLAT.format(context_code, prefix_code, suffix_code)
-    obj["input"] = input_prompt
+    obj["input"] = post_process(input_prompt)
     return obj, metadata

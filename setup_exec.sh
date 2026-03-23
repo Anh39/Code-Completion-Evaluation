@@ -1,5 +1,5 @@
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-bash Miniconda3-latest-Linux-x86_64.sh -b
+# wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+# bash Miniconda3-latest-Linux-x86_64.sh -b
 
 git lfs install
 git clone https://huggingface.co/datasets/CSJianYang/ExecRepoBench
@@ -22,8 +22,8 @@ python create_test_repo.py --action "prepare_environments" --conda_dir "$HOME/mi
 pip3 install typing_extensions==4.14.1
 cd ..
 deactivate
-source /root/miniconda3/etc/profile.d/conda.sh
 
+source /root/miniconda3/etc/profile.d/conda.sh
 for env in /root/workspace/ExecRepoBench/envs/envs/*; do
     echo "Processing $env"
     conda activate "$env"
@@ -31,6 +31,7 @@ for env in /root/workspace/ExecRepoBench/envs/envs/*; do
     conda deactivate
 done
 deactivate
+
 source env/bin/activate
 python create_test_script.py
 cd ExecRepoBench
