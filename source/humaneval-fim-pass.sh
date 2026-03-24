@@ -7,7 +7,7 @@ python humaneval-fim-pass.py \
     --input_dir data/HumanEval \
     --model_output_dir model_outputs/qwen25-05-base \
     --eval_output_dir eval_outputs/qwen25-05-base \
-    --tasks single-line multi-line \
+    --tasks single-line multi-line span span-light \
     --max_seq_length 4096 \
     --max_model_length 5000 \
     --workers 32 \

@@ -5,7 +5,7 @@ OUTPUT_NAME=$3
 GPU_INDEX=$4
 VRAM_UTILIZATION=$5
 LORA_PATH=$6
-WORKER=8
+WORKER=16
 
 export LC_ALL="POSIX"
 export CUDA_DEVICE_ORDER=PCI_BUS_ID
@@ -19,7 +19,7 @@ CMD_HUMAN="python humaneval-fim-pass.py \
     --input_dir data/HumanEval \
     --model_output_dir ${MODEL_OUTPUT_DIR} \
     --eval_output_dir ${EVAL_OUTPUT_DIR} \
-    --tasks single-line multi-line \
+    --tasks single-line multi-line span span-light \
     --max_seq_length 4096 \
     --max_model_length 5000 \
     --workers ${WORKER} \
@@ -42,8 +42,8 @@ CMD_EXEC="python execrepobench.py \
     --tp 1 \
     --vram_utilization ${VRAM_UTILIZATION} \
     --workers ${WORKER} \
-    --repo_dir ~/anh-uet/eval/qwen25-exec-repo/repos \
-    --env_path ~jovyan/Qwen3-Coder/qwencoder-eval/base/benchmarks/ExecRepoBench/envs/envs"
+    --repo_dir /root/workspace/ExecRepoBench/repos \
+    --env_path /root/workspace/ExecRepoBench/envs/envs"
 if [ ! -z "$LORA_PATH" ]; then
     CMD_EXEC="${CMD_EXEC} --lora_path ${LORA_PATH}"
 fi

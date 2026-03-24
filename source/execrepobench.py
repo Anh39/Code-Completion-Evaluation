@@ -197,8 +197,8 @@ def main():
     os.makedirs(args.model_output_dir, exist_ok=True)
     os.makedirs(args.eval_output_dir, exist_ok=True)
     generated_samples = None
-    # generated_samples = generate_samples(args)
-    generated_samples = read_jsonl_file(os.path.join(args.model_output_dir, f"execrepo.jsonl"))
+    generated_samples = generate_samples(args)
+    # generated_samples = read_jsonl_file(os.path.join(args.model_output_dir, f"execrepo.jsonl"))
     objs, results = evaluate_all_correctness(generated_samples, args)
     os.makedirs(os.path.join(args.eval_output_dir, "details"), exist_ok=True)
     with open(os.path.join(args.eval_output_dir, "details", "execrepo_objs.json"), 'w', encoding='utf-8') as file:

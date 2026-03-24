@@ -70,7 +70,7 @@ def generate(custom_args: Optional[argparse.Namespace] = None):
         parser.add_argument("--model_output_dir", type=str, default="model_outputs")
         parser.add_argument("--eval_output_dir", type=str, default="eval_outputs")
         parser.add_argument("--lora_path", type=str, default=None, help="lora path")
-        parser.add_argument("--languages", nargs="+", type=str, default=["cpp", "java", "python", "csharp"])
+        parser.add_argument("--languages", nargs="+", type=str, default=["javascript", "java", "python", "csharp"])
         
         parser.add_argument("--ts_lib", type=str, default="build/python-lang-parser.so", help="tree-sitter lib for tokenize code")
         
