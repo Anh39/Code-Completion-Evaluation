@@ -2,6 +2,8 @@ PRE = "<|fim_prefix|>"
 MID = "<|fim_middle|>"
 SUF = "<|fim_suffix|>"
 EOT = "<|endoftext|>"
+FUNCTION_STARTS = ["def ", "function ", "func ", "public ", "private ", "protected ", "internal "]
+FUNCTION_STOPS = ["@", "class ", "def ", "function ", "func ", "public ", "private ", "protected ", "internal "]
 def _split(prompt: str) -> tuple[str, str, str]:
     _, rest = prompt.split(PRE)
     prefix, rest = rest.split(SUF)
@@ -21,15 +23,14 @@ def _detect_function_prefix(prefix: str) -> int | None:
     lines = prefix.splitlines()
     for i in range(len(lines)-1, -1, -1):
         line = lines[i]
-        if line.lstrip().startswith("def "):
+        if any([line.lstrip().startswith(mark) for mark in FUNCTION_STARTS]):
             return i
     return None
 def _detect_stop_suffix(suffix: str) -> int:
     lines = suffix.splitlines()
-    marks = ["@", "class ", "def "]
     for i in range(len(lines)):
         line = lines[i]
-        if any([line.lstrip().startswith(mark) for mark in marks]):
+        if any([line.lstrip().startswith(mark) for mark in FUNCTION_STOPS]):
             return i
     return len(lines)
 def function_cache(prompt: str) -> str:

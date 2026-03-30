@@ -33,7 +33,7 @@ CMD_CCEVAL="python cceval.py \
     --input_file data/cceval/LANGUAGE/line_completion_oracle_bm25.jsonl \
     --model_output_dir ${MODEL_OUTPUT_DIR} \
     --eval_output_dir ${EVAL_OUTPUT_DIR} \
-    --languages python java csharp javascript \
+    --languages python java csharp typescript \
     --ts_lib grammar/LANGUAGE-lang-parser.so \
     --max_seq_length 8192 \
     --gen_length 50 \
